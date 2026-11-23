@@ -1,0 +1,454 @@
+:root {
+  --cols: 9;
+  --rows: 11;
+  --ink: #2b1d16;
+  --wood: #3b2a20;
+  --tile-a: #efe4cf;
+  --tile-b: #c9724a;
+  --grout: #8c7a66;
+  --chalk: #fbfaf5;
+  --ant: #3a1e14;
+  --accent: #e0a23a;
+  --bad: #b8372b;
+  --tile: min(calc((100vw - 28px) / var(--cols)), calc((100dvh - 230px) / var(--rows)), 52px);
+  font-family: ui-rounded, 'SF Pro Rounded', 'Segoe UI', system-ui, sans-serif;
+  color: var(--ink);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: radial-gradient(circle at 50% 0%, #5a4334, var(--wood) 70%);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.game {
+  width: calc(var(--tile) * var(--cols) + 16px);
+  margin: 0 auto;
+  padding: max(10px, env(safe-area-inset-top)) 0 max(10px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f6ead6;
+}
+
+.bar h1 {
+  margin: 0 auto 0 0;
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 52px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.stat span {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.stat b {
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat.chalk.low b {
+  color: #ffb4a8;
+}
+
+.notice {
+  margin: 0;
+  min-height: 1.3em;
+  text-align: center;
+  color: #f6ead6;
+  font-size: 0.9rem;
+}
+
+.notice.warn {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* The floor */
+.floor-wrap {
+  position: relative;
+  padding: 8px;
+  border-radius: 12px;
+  background: #6d5545;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+.crack {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: 0;
+  height: 8px;
+  background: repeating-linear-gradient(100deg, #1d130e 0 7px, #3a2a20 7px 10px, #120b08 10px 18px);
+  clip-path: polygon(0 0, 100% 0, 100% 60%, 92% 100%, 80% 40%, 66% 90%, 50% 30%, 34% 100%, 20% 50%, 8% 90%, 0 50%);
+}
+
+.crumbs {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 8px;
+  background: radial-gradient(circle, var(--accent) 0 1.6px, transparent 2px) 0 0 / 13px 8px,
+    radial-gradient(circle, #f1c66d 0 1.2px, transparent 1.6px) 6px 3px / 17px 8px;
+}
+
+.floor {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--tile));
+  grid-template-rows: repeat(var(--rows), var(--tile));
+  gap: 0;
+  background: var(--grout);
+  border-radius: 4px;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.tile {
+  position: relative;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: var(--tile-a);
+  box-shadow: inset 0 0 0 1px var(--grout), inset 2px 2px 0 1px rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+}
+
+.tile.b {
+  background: var(--tile-b);
+}
+
+.tile.goal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 60%, var(--accent) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 70% 35%, #f1c66d 0 1.5px, transparent 2px), radial-gradient(circle at 55% 80%, var(--accent) 0 1.5px, transparent 2px);
+  opacity: 0.8;
+}
+
+.tile:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -3px;
+  z-index: 1;
+}
+
+@media (hover: hover) {
+  .floor.live .tile:not(.block):not(.chalk):hover {
+    box-shadow: inset 0 0 0 1px var(--grout), inset 0 0 0 calc(var(--tile) / 2) rgba(255, 255, 255, 0.35);
+  }
+}
+
+.tile.block {
+  cursor: default;
+}
+
+/* Furniture: a table or chair leg seen from above */
+.tile.block::before {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #a77a52, #6a4527 60%, #4a2f1a);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.35), inset 0 0 0 3px rgba(0, 0, 0, 0.12);
+}
+
+.tile.block.jar::before {
+  inset: 10%;
+  border-radius: 30%;
+  background: radial-gradient(circle at 35% 30%, #d8e6e9, #8fb0b8 55%, #5f7f87);
+}
+
+/* Chalk: a fat, scuffed stroke */
+.tile.chalk {
+  cursor: default;
+}
+
+.tile.chalk::before {
+  content: '';
+  position: absolute;
+  inset: 8%;
+  border-radius: 22%;
+  background: repeating-linear-gradient(var(--angle, 35deg), rgba(255, 255, 255, 0.95) 0 3px, rgba(240, 238, 228, 0.75) 3px 5px, rgba(255, 255, 255, 0.9) 5px 8px),
+    var(--chalk);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6), 0 0 8px rgba(255, 255, 255, 0.55);
+  animation: draw 0.18s ease-out;
+}
+
+@keyframes draw {
+  from {
+    transform: scale(0.3) rotate(-20deg);
+    opacity: 0;
+  }
+}
+
+/* Ants */
+.ant {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--tile);
+  height: var(--tile);
+  pointer-events: none;
+  transform: translate(calc(var(--c) * var(--tile)), calc(var(--r) * var(--tile)));
+  transition: transform 0.22s linear;
+  z-index: 2;
+}
+
+.ant svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(var(--rot, 180deg));
+  transition: transform 0.12s;
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.35));
+}
+
+.ant .legs {
+  animation: walk 0.22s steps(2) infinite;
+  transform-origin: 50% 50%;
+}
+
+.ant.trapped .legs {
+  animation-duration: 0.7s;
+}
+
+.ant.trapped .feelers {
+  animation: confused 0.9s ease-in-out infinite alternate;
+  transform-origin: 50% 30%;
+}
+
+.ant.arrive {
+  animation: arrive 0.3s ease-out;
+}
+
+.ant.won svg {
+  animation: feast 0.35s ease-in-out infinite alternate;
+}
+
+@keyframes walk {
+  to {
+    transform: scaleY(-1);
+  }
+}
+
+@keyframes confused {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    scale: 0.4;
+  }
+}
+
+@keyframes feast {
+  to {
+    scale: 1.25;
+  }
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #f6ead6;
+  font-size: 0.85rem;
+}
+
+.who a,
+.card a {
+  color: var(--accent);
+}
+
+button {
+  font: inherit;
+}
+
+.ghost,
+.primary {
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ghost {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f6ead6;
+}
+
+.ghost:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.primary {
+  background: var(--accent);
+  color: var(--ink);
+  padding: 12px 26px;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 0 #a8731f;
+}
+
+.primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #a8731f;
+}
+
+/* Cards */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(30, 18, 12, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 10;
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.card {
+  width: min(380px, 100%);
+  max-height: 90dvh;
+  overflow: auto;
+  padding: 22px;
+  border-radius: 18px;
+  background: var(--tile-a);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+}
+
+.card p {
+  margin: 8px 0;
+  line-height: 1.4;
+}
+
+.card ul.how {
+  text-align: left;
+  padding-left: 1.2em;
+  line-height: 1.45;
+}
+
+.card .big {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin: 4px 0;
+}
+
+.card .small {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.board {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.9rem;
+}
+
+.board td {
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.board td:first-child {
+  width: 2em;
+  opacity: 0.6;
+}
+
+.board td:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.board tr.me td {
+  background: rgba(224, 162, 58, 0.25);
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  padding: 14px 22px;
+  border-radius: 14px;
+  background: var(--tile-a);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 1.2rem;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  z-index: 9;
+  animation: pop 0.25s ease-out;
+}
+
+.toast small {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+@keyframes pop {
+  from {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ant,
+  .ant svg {
+    transition: none;
+  }
+  .ant .legs,
+  .ant .feelers,
+  .ant.won svg {
+    animation: none;
+  }
+}

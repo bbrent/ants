@@ -1,0 +1,15 @@
+{
+  "name": "ants",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Trap the ants with chalk before they reach the crumbs. A game for the game hub.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "sim": "node tools/sim.js",
+    "dev": "python3 -m http.server 8080"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ants",
+  "name": "Ants",
+  "trust": "casual",
+  "url": "https://orangeotter.ca/ants/",
+  "leaderboards": [{ "id": "score", "type": "highest", "label": "Highest score" }],
+  "limits": { "minScore": 0, "maxScore": 100000, "maxScorePerSec": 200, "minDurationMs": 2000 }
+}

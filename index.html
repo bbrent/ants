@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- Where the game hub lives, relative to this page's site. Override with ?hub=URL for testing. -->
+    <meta name="hub-url" content="/account" />
+    <meta name="theme-color" content="#3b2a20" />
+    <title>Ants</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e9dcc4'/%3E%3Cellipse cx='16' cy='9' rx='4' ry='4' fill='%233a1e14'/%3E%3Cellipse cx='16' cy='16' rx='3' ry='3.5' fill='%233a1e14'/%3E%3Cellipse cx='16' cy='24' rx='5' ry='6' fill='%233a1e14'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <main class="game">
+      <header class="bar">
+        <h1>Ants</h1>
+        <div class="stat"><span>Level</span><b id="level">1</b></div>
+        <div class="stat"><span>Score</span><b id="score">0</b></div>
+        <div class="stat chalk"><span>Chalk</span><b id="chalk">0</b></div>
+      </header>
+
+      <p class="notice" id="notice" aria-live="polite">&nbsp;</p>
+
+      <div class="floor-wrap">
+        <div class="crack" aria-hidden="true"></div>
+        <div class="floor" id="floor" role="grid" aria-label="Kitchen floor"></div>
+        <div class="crumbs" aria-hidden="true"></div>
+      </div>
+
+      <footer class="controls">
+        <button id="wait" class="ghost" disabled>Wait a turn</button>
+        <span id="who" class="who"></span>
+      </footer>
+    </main>
+
+    <div class="overlay" id="overlay" hidden>
+      <div class="card" id="card"></div>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
