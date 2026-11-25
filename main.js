@@ -14,7 +14,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const hubUrl = (() => {
   const q = new URLSearchParams(location.search).get('hub');
-  const meta = document.querySelector('meta[name="hub-url"]')?.content ?? '/account';
+  const meta = document.querySelector('meta[name="hub-url"]')?.content ?? '/';
   return new URL(q || meta, location.href).href.replace(/\/+$/, '');
 })();
 

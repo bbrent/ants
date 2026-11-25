@@ -1,8 +1,26 @@
 {
   "id": "ants",
   "name": "Ants",
+  "genre": "Puzzle",
+  "description": "Draw chalk lines on the kitchen tiles to trap the ants before they reach the crumbs.",
+  "devices": [
+    "phone",
+    "tablet",
+    "desktop"
+  ],
   "trust": "casual",
   "url": "https://orangeotter.ca/ants/",
-  "leaderboards": [{ "id": "score", "type": "highest", "label": "Highest score" }],
-  "limits": { "minScore": 0, "maxScore": 100000, "maxScorePerSec": 200, "minDurationMs": 2000 }
+  "leaderboards": [
+    {
+      "id": "score",
+      "type": "highest",
+      "label": "Highest score"
+    }
+  ],
+  "limits": {
+    "minScore": 0,
+    "maxScore": 100000,
+    "maxScorePerSec": 200,
+    "minDurationMs": 2000
+  }
 }
